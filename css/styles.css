@@ -1,0 +1,32 @@
+.field table {
+	border-spacing: 0;
+}
+
+.field tr,
+.field td {
+	padding: 0;
+}
+
+.cell {
+  box-sizing: border-box;
+
+	width: 16px;
+	height: 16px;
+
+	font-family: Arial, sans-serif;
+	font-size: 12px;
+	font-weight: bold;
+	text-align: center;
+	line-height: 14px;
+
+	background: #bdbdbd;
+	border: 2px outset #e8e8e8;
+}
+
+.open {
+	border: 1px solid #989898;
+}
+
+.marked {
+	background: #FF592D;
+}
