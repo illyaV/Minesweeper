@@ -19,7 +19,6 @@
   		this.resetGame();
   		this.genBombs();
   		this.genTips();
-  		this.drowField();
   		this.initHandlers();
   	},
 
@@ -33,10 +32,12 @@
           this._gameMatrix[i][j] = 0;
       	}
       }
+
+      this.drowField();
   	},
 
   	genBombs: function() {
-      var flag = true,
+      var flag = 0,
           x, y;
 
       while (flag<16) {
@@ -162,7 +163,7 @@
   	},
 
   	lostGame: function() {
-
+      this.resetGame();
   	},
 
   	wonGame: function() {
