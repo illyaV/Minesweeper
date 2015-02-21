@@ -17,8 +17,6 @@
       this._$field = $("#field");
 
   		this.resetGame();
-  		this.genBombs();
-  		this.genTips();
   		this.initHandlers();
   	},
 
@@ -32,7 +30,9 @@
           this._gameMatrix[i][j] = 0;
       	}
       }
-
+      
+      this.genBombs();
+  		this.genTips();
       this.drowField();
   	},
 
@@ -40,7 +40,7 @@
       var flag = 0,
           x, y;
 
-      while (flag<16) {
+      while (flag <+ this._bombCount) {
         x = Math.floor(Math.random() * (this._fieldSize.w));
         y = Math.floor(Math.random() * (this._fieldSize.h));
         if (!this._bombsCash[x+"_"+y]) {
