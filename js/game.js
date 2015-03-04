@@ -1,6 +1,9 @@
 /** @jsx React.DOM */
+var app = app || {};
+
 (function(window, $, React){
   'use strict';
+  var Field = app.Field;
 
   var Game = React.createClass({displayName: "Game",
     getInitialState: function(){
@@ -13,7 +16,13 @@
 
     render: function() {
       console.log(this.state.matrix);
-      return (React.createElement("div", {className: "game"}));
+
+      var rows = this.makeRows();
+      return (React.createElement("div", {className: "game"}, 
+                React.createElement("table", null, 
+                  rows
+                )
+              ));
     },
 
     resetGame: function() {
@@ -70,6 +79,26 @@
       }
 
       return _matrix; 
+    },
+
+    makeRows: function() {
+      var rows = [],
+          row  = "",
+          _matrix = this.state.matrix;
+
+      for (var i = 0, l = _matrix.length; i < l; i++) {
+        //row += "<tr>";
+        
+        for (var j = 0, k = _matrix[i].length; j < k; j++) {
+          rows.push(React.createElement(Field, {status: "'+_matrix[i][j]+'", onClick: "{}"}));  
+        }
+        
+        //row += "</tr>";
+
+        rows.push(row);
+      }
+      
+      return rows;
     }
   });
 

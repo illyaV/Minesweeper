@@ -1,13 +1,13 @@
-.field table {
+table {
 	border-spacing: 0;
 }
 
-.field tr,
-.field td {
+tr,
+td {
 	padding: 0;
 }
 
-.cell {
+.field {
   box-sizing: border-box;
 
 	width: 16px;
