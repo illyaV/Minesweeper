@@ -15,8 +15,6 @@ var app = app || {};
     },
 
     render: function() {
-      console.log(this.state.matrix);
-
       var rows = this.makeRows();
       return (<div className="game">
                 <table>
@@ -31,7 +29,7 @@ var app = app || {};
       for (var i = 0; i < this.props.y; i++ ) {
         _matrix[i] = [];
         for (var j = 0; j < this.props.x; j++) {
-          _matrix[i][j] = 0;
+          _matrix[i][j] = {value: 0, marked: false, opened: false};
         }
       }
 
@@ -46,9 +44,9 @@ var app = app || {};
         x = Math.floor(Math.random() * (this.props.x));
         y = Math.floor(Math.random() * (this.props.y));
         
-        if (_matrix[y][x] !== "X") {
-          _matrix[y][x] = "X";
-          flag++; 
+        if (_matrix[y][x].value !== "X") {
+          _matrix[y][x].value = "X";
+          flag++;
         }  
       }
 
@@ -57,52 +55,53 @@ var app = app || {};
 
     genTips: function(_matrix) {
       var tip;
-
-      for (var i = 0, l = _matrix.length; i < l; i++) {
-        for (var j = 0, k = _matrix[i].length; j < k; j++) {
-          if (_matrix[i][j] !== "X") {
+      return _matrix.map(function(row, i){
+        return row.map(function(item, j){
+          if (item.value !== "X") {
             tip =  0;
 
             for (var h = i - 1; h < i+2; h++) {
               for (var g = j  - 1; g < j + 2; g++) {
-                if (_matrix[h] && _matrix[h][g] === "X") {
+                if (_matrix[h] && _matrix[h][g] && _matrix[h][g].value === "X") {
                   tip++;
                 }
               }
             }
 
-            if (tip > 0) {
-              _matrix[i][j] = tip;
-            } 
+            return {value: tip, opened: item.opened, marked: item.marked}; 
           }
-        }
-      }
+          return item;
+        });
+      }); 
+    },
 
-      return _matrix; 
+    onOpenField: function(x, y) {
+      var _matrix = $.extend([],this.state.matrix);
+      if (!_matrix[y][x].marked) {
+        _matrix[y][x].opened = true;
+        this.setState({matrix: _matrix});
+      }
+    },
+
+    onMarkField: function(x, y) {
+      var _matrix = $.extend([],this.state.matrix);
+      if (!_matrix[y][x].opened) {
+        _matrix[y][x].marked = !_matrix[y][x].marked;
+        this.setState({matrix: _matrix});
+      }
     },
 
     makeRows: function() {
-      var rows = [],
-          row  = "",
-          _matrix = this.state.matrix;
-
-      for (var i = 0, l = _matrix.length; i < l; i++) {
-        //row += "<tr>";
-        
-        for (var j = 0, k = _matrix[i].length; j < k; j++) {
-          rows.push(<Field status="'+_matrix[i][j]+'" onClick="{}" />);  
-        }
-        
-        //row += "</tr>";
-
-        rows.push(row);
-      }
-      
-      return rows;
+      var self = this;
+      return this.state.matrix.map(function(row, y) {
+        return (<tr>{row.map(function(item, x){
+          return (<Field value={item.value} opened={item.opened} marked={item.marked} onOpen={self.onOpenField.bind(self, x, y)} onMark={self.onMarkField.bind(self, x, y)} />);
+        })}</tr>);
+      });
     }
   });
 
-  React.renderComponent(
+  React.render(
     <Game x="16" y="16" bombsCount="15" />,
     document.getElementById("game")
   );
